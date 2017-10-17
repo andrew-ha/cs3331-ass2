@@ -1,6 +1,6 @@
-import java.io.*;
 import java.util.HashMap;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 public class Graph {
 
@@ -26,33 +26,60 @@ public class Graph {
 
         Node startNode = nodeMap.get(startNodeName);
         Node destNode = nodeMap.get(destNodeName);
-        Edge newEdge = new Edge(startNode, destNode, propDelay, simVirtualCircuitCapacity);
+        Edge startEdge = new Edge(startNode, destNode, propDelay, simVirtualCircuitCapacity);
+        Edge endEdge = new Edge(startNode, destNode, propDelay, simVirtualCircuitCapacity);
 
         HashMap<Node, Edge> startNodeAdj = adjMatrix.get(startNode);
-        startNodeAdj.put(destNode, newEdge);
+        startNodeAdj.put(destNode, startEdge);
+        HashMap<Node, Edge> destNodeAdj = adjMatrix.get(destNode);
+        destNodeAdj.put(startNode, endEdge);
     }
 
-    public static void main (String[] args) {
-        Graph g = new Graph();
+    public Edge getEdge(Node src, Node dst) {
+        return adjMatrix.get(src).get(dst);
+    }
 
-        //Read in the topology
-        Scanner sc = null;
-        try {
-            sc = new Scanner(new File(args[0]));
+    public Node getNode(String name) {
+        return nodeMap.get(name);
+    }
 
-            while (sc.hasNext()) {
+    public void shortestHopPath(Stats stats, Node src, Node dst) {
+        // Create queues and maps for toVisit, distances from source, and predecessors
+        PriorityQueue<Node> toVisit = new PriorityQueue<>();
+        HashMap<Node, Integer> dist = new HashMap<>();
+        HashMap<Node, Node> pred = new HashMap<>();
 
-                String[] line = sc.nextLine().split(" ");
-                g.addNode(line[0]);
-                g.addNode(line[1]);
-                g.addEdge(line[0], line[1], Integer.parseInt(line[2]), Integer.parseInt(line[3]));
+        for (Node n : nodeMap.values()) {
+           dist.put(n, Integer.MAX_VALUE);  // Initialise distance from source to nodes as max
+           pred.put(n, null);               // Initialise previous nodes in the optimal path to be null
+           toVisit.add(n);                  // Add the nodes to our toVisit queue
+        }
 
+        dist.put(src, 0);                    // Distance from source to source is zero;
+
+        // Need to implement sorting by dist hashMap
+        while (!toVisit.isEmpty()) {
+            Node curr = toVisit.poll();
+
+            // Check each neighbouring node of curr
+            for (Node neighbour : adjMatrix.get(curr).keySet()) {
+                int distance = dist.get(curr) + 1 ;
+
+                // If a shorter path to this neighbour exists
+                // Update its distance and its predecessor
+                if (distance < dist.get(neighbour))  {
+                    dist.put(neighbour, distance);
+                    pred.put(neighbour, curr);
+                }
             }
+        }
 
-        } catch (FileNotFoundException e) {
-            System.err.println("No topology file inputted");
-        } finally {
-            if (sc != null) sc.close();
+        // Now go through your predecessors from dst to src and chuck edges in a list
+        ArrayList<Edge> path = new ArrayList<Edge>();
+        Node curr = dst;
+        while (curr != src) {
+            Edge e = getEdge(curr, pred.get(curr));
+            path.add(e);
         }
     }
 }
