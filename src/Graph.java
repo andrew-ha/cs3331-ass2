@@ -41,10 +41,10 @@ public class Graph {
             sc = new Scanner(new File(args[0]));
 
             while (sc.hasNext()) {
+
                 String[] line = sc.nextLine().split(" ");
                 g.addNode(line[0]);
                 g.addNode(line[1]);
-
                 g.addEdge(line[0], line[1], Integer.parseInt(line[2]), Integer.parseInt(line[3]));
 
             }

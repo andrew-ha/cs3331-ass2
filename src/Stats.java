@@ -39,6 +39,16 @@ public class Stats {
         numOfBlockedPackets++;
     }
 
-    public void 
+    public void performedHop() {
+        numOfHopsTotal++;
+    }
+
+    public void addPropDelay(int propDelayInstance) {
+        propDelayTotal += propDelayInstance;
+    }
+
+    public void circuitSuccess() {
+        numOfSuccessCiruits++;
+    }
 
 }
