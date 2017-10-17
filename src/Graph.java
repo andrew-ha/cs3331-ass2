@@ -33,13 +33,20 @@ public class Graph {
     }
 
     public static void main (String[] args) {
+        Graph g = new Graph();
+
         //Read in the topology
         Scanner sc = null;
         try {
             sc = new Scanner(new File(args[0]));
 
             while (sc.hasNext()) {
-                System.out.println(sc.nextLine());
+                String[] line = sc.nextLine().split(" ");
+                g.addNode(line[0]);
+                g.addNode(line[1]);
+
+                g.addEdge(line[0], line[1], Integer.parseInt(line[2]), Integer.parseInt(line[3]));
+
             }
 
         } catch (FileNotFoundException e) {
