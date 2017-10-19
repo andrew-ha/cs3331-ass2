@@ -31,8 +31,14 @@ public class Main {
 
             while (sc.hasNext()) {
                 String[] line = sc.nextLine().split(" ");
-                Node source = g.getNode(line[1]);
-                Node destination = g.getNode(line[2]);
+                String source = line[1];
+                String destination = line[2];
+
+                Float timeStart = Float.parseFloat(line[0]);
+                Float duration = Float.parseFloat(line[3]);
+
+
+
             }
 
 

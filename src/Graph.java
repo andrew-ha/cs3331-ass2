@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Graph {
 
@@ -31,13 +29,13 @@ public class Graph {
         return adjMatrix.get(src).get(dst);
     }
 
-    public void shortestHopPath(Stats stats, Node src, Node dst) {
+    public void shortestHopPath(Stats stats, String src, String dst) {
         // Create queues and maps for toVisit, distances from source, and predecessors
-        PriorityQueue<Node> toVisit = new PriorityQueue<>();
-        HashMap<Node, Integer> dist = new HashMap<>();
-        HashMap<Node, Node> pred = new HashMap<>();
+        PriorityQueue<String> toVisit = new PriorityQueue<>();
+        HashMap<String, Integer> dist = new HashMap<>();
+        HashMap<String, String> pred = new HashMap<>();
 
-        for (Node n : nodeMap.values()) {
+        for (String n : adjMatrix.keySet()) {
            dist.put(n, Integer.MAX_VALUE);  // Initialise distance from source to nodes as max
            pred.put(n, null);               // Initialise previous nodes in the optimal path to be null
            toVisit.add(n);                  // Add the nodes to our toVisit queue
@@ -47,10 +45,10 @@ public class Graph {
 
         // Need to implement sorting by dist hashMap
         while (!toVisit.isEmpty()) {
-            Node curr = toVisit.poll();
+            String curr = toVisit.poll();
 
             // Check each neighbouring node of curr
-            for (Node neighbour : adjMatrix.get(curr).keySet()) {
+            for (String neighbour : adjMatrix.get(curr).keySet()) {
                 int distance = dist.get(curr) + 1 ;
 
                 // If a shorter path to this neighbour exists
@@ -63,8 +61,8 @@ public class Graph {
         }
 
         // Now go through your predecessors from dst to src and chuck edges in a list
-        ArrayList<Edge> path = new ArrayList<Edge>();
-        Node curr = dst;
+        ArrayList<Edge> path = new ArrayList<>();
+        String curr = dst;
         while (curr != src) {
             Edge e = getEdge(curr, pred.get(curr));
             path.add(e);
