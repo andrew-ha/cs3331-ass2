@@ -1,3 +1,5 @@
+import javafx.scene.layout.Priority;
+
 import java.io.*;
 import java.util.*;
 
@@ -5,6 +7,11 @@ public class Main {
 
     public static void main(String[] args) {
         Graph g = new Graph();
+
+        // list of requests to be made from the workload file
+        PriorityQueue<Request> listOfRequests = new PriorityQueue<>();
+        // statistics for the SHP request
+        Stats shpStats = new Stats();
 
         //Read in the topology
         Scanner sc = null;
@@ -24,6 +31,7 @@ public class Main {
             System.err.println("No topology file inputted");
             System.exit(0);
         }
+
         // Read in the workload file
         try {
             sc = new Scanner(new File(args[1]));
@@ -39,11 +47,43 @@ public class Main {
                 // Get path using chosen protocol
 
                 //Insert path into Request constructor and add to a Priority Queue
+                Request newStartRequest = new Request(timeStart, path, true);
+                Request newEndRequest = new Request(timeStart + duration, path, false);
+                listOfRequests.add(newStartRequest);
+                listOfRequests.add(newEndRequest);
 
             }
+
+            boolean connectionSuccess;
+
             // While PQueue is not empty process the Results
-            // while () {
-            // }
+            while (!listOfRequests.isEmpty()) {
+
+                // take the earliest request
+                Request currRequest = listOfRequests.poll();
+
+                // for each edge in the request
+                for (Edge currEdge : currRequest.getEdges()) {
+
+                    // if the request is to establish a connection
+                    if (currRequest.isEstablish()) {
+                        // try to add the connection
+                        connectionSuccess = currEdge.updateCurrConnections(true);
+                        if (connectionSuccess) {
+                            shpStats.recordSuccessfulRequest();
+                        } else {
+                            shpStats.recordBlockedRequest();
+                        }
+                    } else {
+                        // remove a connection
+                        currEdge.updateCurrConnections(false);
+                    }
+
+                }
+
+            }
+
+            shpStats.printStats();
 
 
         } catch (FileNotFoundException e) {
