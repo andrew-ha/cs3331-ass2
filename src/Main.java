@@ -55,7 +55,7 @@ public class Main {
 
             }
 
-            boolean connectionSuccess;
+            boolean connectionSuccess = true;
 
             // While PQueue is not empty process the Results
             while (!listOfRequests.isEmpty()) {
@@ -68,16 +68,19 @@ public class Main {
 
                     // if the request is to establish a connection
                     if (currRequest.isEstablish()) {
+
                         // try to add the connection
                         connectionSuccess = currEdge.updateCurrConnections(true);
                         if (connectionSuccess) {
                             shpStats.recordSuccessfulRequest();
                         } else {
                             shpStats.recordBlockedRequest();
+                            break;
                         }
+
                     } else {
                         // remove a connection
-                        currEdge.updateCurrConnections(false);
+                        connectionSuccess = currEdge.checkConnectionValid(false);
                     }
 
                 }
