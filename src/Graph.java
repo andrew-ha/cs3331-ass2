@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Graph {
 
@@ -13,12 +11,13 @@ public class Graph {
     }
 
     public void addNode(String name) {
+        if (!nodeMap.containsKey(name)) {
+            Node newNode = new Node(name);
+            nodeMap.put(name, newNode);
 
-        Node newNode = new Node(name);
-        nodeMap.put(name, newNode);
-
-        HashMap<Node, Edge> newHashMap = new HashMap<>();
-        adjMatrix.put(newNode, newHashMap);
+            HashMap<Node, Edge> newHashMap = new HashMap<>();
+            adjMatrix.put(newNode, newHashMap);
+        }
 
     }
 
@@ -45,31 +44,37 @@ public class Graph {
 
     public void shortestHopPath(Stats stats, Node src, Node dst) {
         // Create queues and maps for toVisit, distances from source, and predecessors
-        PriorityQueue<Node> toVisit = new PriorityQueue<>();
+        Queue<Node> toVisit = new LinkedList<>();
         HashMap<Node, Integer> dist = new HashMap<>();
         HashMap<Node, Node> pred = new HashMap<>();
 
         for (Node n : nodeMap.values()) {
-           dist.put(n, Integer.MAX_VALUE);  // Initialise distance from source to nodes as max
-           pred.put(n, null);               // Initialise previous nodes in the optimal path to be null
-           toVisit.add(n);                  // Add the nodes to our toVisit queue
-        }
 
-        dist.put(src, 0);                   // Distance from source to source is zero;
+            dist.put(n, Integer.MAX_VALUE);  // Initialise distance from source to nodes as max
+            pred.put(n, null);               // Initialise previous nodes in the optimal path to be null
+        }
+        toVisit.add(src);                      // Add the nodes to our toVisit queue
+        dist.put(src, 0);                    // Distance from source to source is zero;
 
         // Need to implement sorting by dist hashMap
         while (!toVisit.isEmpty()) {
             Node curr = toVisit.poll();
+            if (curr == dst) {
+                break;
+            }
 
             // Check each neighbouring node of curr
             for (Node neighbour : adjMatrix.get(curr).keySet()) {
-                int distance = dist.get(curr) + 1 ;
+                Integer distance = dist.get(curr) + 1 ;
 
                 // If a shorter path to this neighbour exists
                 // Update its distance and its predecessor
+
                 if (distance < dist.get(neighbour))  {
+                    System.out.println(curr.getName() + " to " + neighbour.getName() + " = " + distance);
                     dist.put(neighbour, distance);
                     pred.put(neighbour, curr);
+                    toVisit.add(neighbour);
                 }
             }
         }
@@ -80,6 +85,7 @@ public class Graph {
         while (curr != src) {
             Edge e = getEdge(curr, pred.get(curr));
             path.add(e);
+            System.out.println(curr.getName() + "  TO  " + pred.get(curr).getName());
         }
     }
 }

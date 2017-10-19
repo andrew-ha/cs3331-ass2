@@ -27,12 +27,14 @@ public class Main {
         }
         // Read in the workload file
         try {
+            Stats stat = new Stats();
             sc = new Scanner(new File(args[1]));
 
             while (sc.hasNext()) {
                 String[] line = sc.nextLine().split(" ");
                 Node source = g.getNode(line[1]);
                 Node destination = g.getNode(line[2]);
+                g.shortestHopPath(stat, source, destination);
             }
 
 
