@@ -1,25 +1,25 @@
 
 public class Edge {
 
-    private Node startNode;
-    private Node destNode;
+    private String start;
+    private String dest;
     private int propDelay;
     private int simVirtualCircuitCapacity;
 
-    public Edge(Node startNode, Node destNode, Integer propDelay, int simVirtualCircuitCapacity) {
-        this.startNode = startNode;
-        this.destNode = destNode;
+    public Edge(String start, String dest, Integer propDelay, int simVirtualCircuitCapacity) {
+        this.start = start;
+        this.dest = dest;
         this.propDelay = propDelay;
         this.simVirtualCircuitCapacity = simVirtualCircuitCapacity;
     }
 
 
-    public Node getStartNode() {
-        return startNode;
+    public String getStartNode() {
+        return start;
     }
 
-    public Node getDestNode() {
-        return destNode;
+    public String getDestNode() {
+        return dest;
     }
 
     public Integer getPropDelay() {
