@@ -32,7 +32,7 @@ public class Edge {
         return simVirtualCircuitCapacity;
     }
 
-    public boolean checkConnectionValid(boolean isEstablish) {
+    public boolean updateConnection(boolean isEstablish) {
 
         if (isEstablish) {
 
