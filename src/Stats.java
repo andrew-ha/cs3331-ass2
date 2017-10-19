@@ -31,8 +31,12 @@ public class Stats {
         numOfBlockedRequests++;
     }
 
-    public void recordHop(int numOfHops) {
-        numOfHopsTotal += numOfHops;
+    public void recordHop(boolean isRevert) {
+        if (isRevert) {
+            numOfHopsTotal--;
+        } else {
+            numOfHopsTotal++;
+        }
     }
 
     public void recordPropDelay(int propDelayInstance) {

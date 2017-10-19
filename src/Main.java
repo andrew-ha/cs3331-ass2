@@ -1,5 +1,3 @@
-import javafx.scene.layout.Priority;
-
 import java.io.*;
 import java.util.*;
 
@@ -63,6 +61,9 @@ public class Main {
 
                 // take the earliest request
                 Request currRequest = listOfRequests.poll();
+                boolean requestBlocked = false;
+
+                if (currRequest.isEstablish()) shpStats.recordNewRequest();
 
                 // for each edge in the request
                 for (Edge currEdge : currRequest.getEdges()) {
@@ -71,18 +72,42 @@ public class Main {
                     if (currRequest.isEstablish()) {
 
                         // try to add the connection
-                        connectionSuccess = currEdge.checkConnectionValid(true);
+                        connectionSuccess = currEdge.updateConnection(true);
                         if (connectionSuccess) {
-                            shpStats.recordSuccessfulRequest();
+                            shpStats.recordHop(false);
+                            shpStats.recordPropDelay(currEdge.getPropDelay());
                         } else {
-                            shpStats.recordBlockedRequest();
-                            break;
+                            //shpStats.recordBlockedRequest();
+                            requestBlocked = true;
                         }
 
                     } else {
                         // remove a connection
-                        connectionSuccess = currEdge.checkConnectionValid(false);
+                        connectionSuccess = currEdge.updateConnection(false);
+                        if(!connectionSuccess) requestBlocked = true;
                     }
+
+                }
+
+                if(requestBlocked) {
+
+                    if (currRequest.isEstablish()) shpStats.recordBlockedRequest();
+
+                    for (Edge currEdge : currRequest.getEdges()) {
+
+                        if(currRequest.isEstablish()) {
+                            shpStats.recordHop(true);
+                            currEdge.updateConnection(false);
+                            shpStats.recordPropDelay(-currEdge.getPropDelay());
+                        } else {
+                            currEdge.updateConnection(true);
+                        }
+
+                    }
+
+                } else {
+
+                    if (currRequest.isEstablish()) shpStats.recordSuccessfulRequest();
 
                 }
 
