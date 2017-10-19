@@ -1,6 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
@@ -37,10 +36,14 @@ public class Main {
                 Float timeStart = Float.parseFloat(line[0]);
                 Float duration = Float.parseFloat(line[3]);
 
+                // Get path using chosen protocol
 
+                //Insert path into Request constructor and add to a Priority Queue
 
             }
-
+            // While PQueue is not empty process the Results
+            // while () {
+            // }
 
 
         } catch (FileNotFoundException e) {

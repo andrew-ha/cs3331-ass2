@@ -1,4 +1,4 @@
-dOUTPUT 1
+OUTPUT 1
 --------------------SHP-------------------- 
 
 total number of virtual circuit requests: 5884 
