@@ -32,7 +32,7 @@ public class Edge {
         return simVirtualCircuitCapacity;
     }
 
-    public boolean updateCurrConnections(boolean isEstablish) {
+    public boolean checkConnectionValid(boolean isEstablish) {
 
         if (isEstablish) {
 
@@ -42,7 +42,10 @@ public class Edge {
             }
 
         } else {
-            this.currConnections--;
+            if (currConnections > 0) {
+                this.currConnections--;
+                return true;
+            }
         }
 
         return false;
