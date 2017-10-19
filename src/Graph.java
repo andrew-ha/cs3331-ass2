@@ -55,7 +55,7 @@ public class Graph {
            toVisit.add(n);                  // Add the nodes to our toVisit queue
         }
 
-        dist.put(src, 0);                    // Distance from source to source is zero;
+        dist.put(src, 0);                   // Distance from source to source is zero;
 
         // Need to implement sorting by dist hashMap
         while (!toVisit.isEmpty()) {
