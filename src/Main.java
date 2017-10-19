@@ -24,7 +24,6 @@ public class Main {
                 g.addNode(line[1]);
 
                 g.addEdge(line[0], line[1], Integer.parseInt(line[2]), Integer.parseInt(line[3]));
-
             }
 
         } catch (FileNotFoundException e) {
@@ -43,8 +42,10 @@ public class Main {
 
                 Float timeStart = Float.parseFloat(line[0]);
                 Float duration = Float.parseFloat(line[3]);
+                Stats stats = new Stats();
 
                 // Get path using chosen protocol
+                ArrayList<Edge> path = g.shortestHopPath(stats, source, destination);
 
                 //Insert path into Request constructor and add to a Priority Queue
                 Request newStartRequest = new Request(timeStart, path, true);
