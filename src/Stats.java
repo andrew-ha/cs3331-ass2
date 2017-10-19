@@ -4,51 +4,51 @@
 public class Stats {
 
     private int numOfRequests;
-    private int numOfPackets;
-    private int numOfSuccessPackets;
-    private int numOfBlockedPackets;
+    private int numOfSuccessRequests;
+    private int numOfBlockedRequests;
     private int numOfHopsTotal;
     private int propDelayTotal;
-    private int numOfSuccessCiruits;
 
     public Stats() {
 
         numOfRequests = 0;
-        numOfPackets = 0;
-        numOfSuccessPackets = 0;
-        numOfBlockedPackets= 0;
+        numOfSuccessRequests = 0;
+        numOfBlockedRequests = 0;
         numOfHopsTotal = 0;
         propDelayTotal = 0;
-        numOfSuccessCiruits = 0;
 
     }
 
-    public void newRequest() {
+    public void recordNewRequest() {
         numOfRequests++;
     }
 
-    public void newPacket() {
-        numOfPackets++;
+    public void recordSuccessfulRequest() {
+        numOfSuccessRequests++;
     }
 
-    public void packetSuccess() {
-        numOfSuccessPackets++;
+    public void recordBlockedRequest() {
+        numOfBlockedRequests++;
     }
 
-    public void packetBlocked() {
-        numOfBlockedPackets++;
+    public void recordHop(int numOfHops) {
+        numOfHopsTotal += numOfHops;
     }
 
-    public void performedHop() {
-        numOfHopsTotal++;
-    }
-
-    public void addPropDelay(int propDelayInstance) {
+    public void recordPropDelay(int propDelayInstance) {
         propDelayTotal += propDelayInstance;
     }
 
-    public void circuitSuccess() {
-        numOfSuccessCiruits++;
+    public void printStats() {
+
+        System.out.println("number of virtual circuit requests: " + numOfRequests);
+        System.out.println("number of successfully routed requests: " + numOfSuccessRequests);
+        System.out.println("percentage of routed request: " + numOfSuccessRequests/numOfRequests);
+        System.out.println("number of blocked requests: " + numOfBlockedRequests);
+        System.out.println("percentage of blocked request: " + numOfBlockedRequests/numOfRequests);
+        System.out.println("average number of hops per circuit: " + numOfHopsTotal/numOfRequests);
+        System.out.println("average cumulative propagation delay per circuit: " + propDelayTotal/numOfRequests);
+
     }
 
 }

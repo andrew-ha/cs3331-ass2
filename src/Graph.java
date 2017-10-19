@@ -47,6 +47,8 @@ public class Graph {
         while (!toVisit.isEmpty()) {
             String curr = toVisit.poll();
 
+            if (curr.equals(dst)) break;
+
             // Check each neighbouring node of curr
             for (String neighbour : adjMatrix.get(curr).keySet()) {
                 int distance = dist.get(curr) + 1 ;
