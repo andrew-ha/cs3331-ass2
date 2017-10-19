@@ -70,7 +70,7 @@ public class Main {
                     if (currRequest.isEstablish()) {
 
                         // try to add the connection
-                        connectionSuccess = currEdge.updateCurrConnections(true);
+                        connectionSuccess = currEdge.checkConnectionValid(true);
                         if (connectionSuccess) {
                             shpStats.recordSuccessfulRequest();
                         } else {
