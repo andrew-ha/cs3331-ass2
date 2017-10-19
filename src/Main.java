@@ -50,6 +50,7 @@ public class Main {
                 //Insert path into Request constructor and add to a Priority Queue
                 Request newStartRequest = new Request(timeStart, path, true);
                 Request newEndRequest = new Request(timeStart + duration, path, false);
+                shpStats.recordNewRequest();
                 listOfRequests.add(newStartRequest);
                 listOfRequests.add(newEndRequest);
 
