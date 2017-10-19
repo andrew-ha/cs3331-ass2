@@ -4,43 +4,31 @@ import java.util.PriorityQueue;
 
 public class Graph {
 
-    private HashMap<String, Node> nodeMap;
-    private HashMap<Node, HashMap<Node, Edge>> adjMatrix;
+    private HashMap<String, HashMap<String, Edge>> adjMatrix;
 
     public Graph() {
-        nodeMap = new HashMap<>();
         adjMatrix = new HashMap<>();
     }
 
     public void addNode(String name) {
-
-        Node newNode = new Node(name);
-        nodeMap.put(name, newNode);
-
-        HashMap<Node, Edge> newHashMap = new HashMap<>();
-        adjMatrix.put(newNode, newHashMap);
+        HashMap<String, Edge> newHashMap = new HashMap<>();
+        adjMatrix.put(name, newHashMap);
 
     }
 
-    public void addEdge(String startNodeName, String destNodeName, int propDelay, int simVirtualCircuitCapacity) {
+    public void addEdge(String start, String dest, int propDelay, int simVirtualCircuitCapacity) {
 
-        Node startNode = nodeMap.get(startNodeName);
-        Node destNode = nodeMap.get(destNodeName);
-        Edge startEdge = new Edge(startNode, destNode, propDelay, simVirtualCircuitCapacity);
-        Edge endEdge = new Edge(startNode, destNode, propDelay, simVirtualCircuitCapacity);
+        Edge startEdge = new Edge(start, dest, propDelay, simVirtualCircuitCapacity);
+        Edge endEdge = new Edge(dest, start, propDelay, simVirtualCircuitCapacity);
 
-        HashMap<Node, Edge> startNodeAdj = adjMatrix.get(startNode);
-        startNodeAdj.put(destNode, startEdge);
-        HashMap<Node, Edge> destNodeAdj = adjMatrix.get(destNode);
-        destNodeAdj.put(startNode, endEdge);
+        HashMap<String, Edge> startNodeAdj = adjMatrix.get(start);
+        startNodeAdj.put(dest, startEdge);
+        HashMap<String, Edge> destNodeAdj = adjMatrix.get(dest);
+        destNodeAdj.put(start, endEdge);
     }
 
-    public Edge getEdge(Node src, Node dst) {
+    public Edge getEdge(String src, String dst) {
         return adjMatrix.get(src).get(dst);
-    }
-
-    public Node getNode(String name) {
-        return nodeMap.get(name);
     }
 
     public void shortestHopPath(Stats stats, Node src, Node dst) {
