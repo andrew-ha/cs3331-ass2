@@ -32,41 +32,36 @@ public class Graph {
 
     public ArrayList<Edge> shortestHopPath(Stats stats, String src, String dst) {
         // Create queues and maps for toVisit, distances from source, and predecessors
-        PriorityQueue<String> toVisit = new PriorityQueue<>();
-        HashMap<String, Integer> dist = new HashMap<>();
-        HashMap<String, String> pred = new HashMap<>();
-        ArrayList<String> seen = new ArrayList<>();
+        PriorityQueue<QueueNode> toVisit = new PriorityQueue<>();
+        HashMap<QueueNode, QueueNode> pred = new HashMap<>();
+        HashMap<String, QueueNode> nodeList = new HashMap<>();
 
         for (String node : adjMatrix.keySet()) {
-            dist.put(node, Integer.MAX_VALUE);  // Initialise distance from source to nodes as max
-            pred.put(node, null);               // Initialise previous nodes in the optimal path to be null
+            // Initialise distance from source to nodes as max
+            QueueNode qNode = new QueueNode(node, Integer.MAX_VALUE);
+            // Initialise previous nodes in the optimal path to be null
+            pred.put(qNode, null);
+            nodeList.put(node, qNode);
         }
-
-        dist.put(src, 0);                   // Distance from source to source is zero;
-        toVisit.add(src);                   // Add the src to our toVisit queue
-
-        //Put in tuple of the node (String) and its distance from the source (
-        // Need to implement sorting by dist hashMap
+        // Set the source node distance value to 0 and add it to the toVisit Queue
+        QueueNode srcNode = nodeList.get(src);
+        srcNode.setVal(0);
+        toVisit.add(srcNode);
         while (!toVisit.isEmpty()) {
-            String curr = toVisit.poll();
-            seen.add(curr);
-
-            if (curr.equals(dst)) break;
-
+            QueueNode currNode = toVisit.poll();
+            if (currNode.getName().equals(dst)) {
+                break;
+            }
             // Check each neighbouring node of curr
-            for (String neighbour : adjMatrix.get(curr).keySet()) {
-                int distance = dist.get(curr) + 1 ;
-//                System.out.println("FROM " + curr + " " + distance + " to " + neighbour);
+            for (String neighbour : adjMatrix.get(currNode.getName()).keySet()) {
+                QueueNode neighbourNode = nodeList.get(neighbour);
+                float distance = currNode.getVal() + 1 ;
                 // If a shorter path to this neighbour exists
                 // Update its distance and its predecessor
-                if (distance < dist.get(neighbour))  {
-                    dist.put(neighbour, distance);
-                    pred.put(neighbour, curr);
-                }
-
-                //If it has not been visited then add it to the
-                if (!seen.contains(neighbour)) {
-                    toVisit.add(neighbour);
+                if (distance < neighbourNode.getVal())  {
+                    neighbourNode.setVal(distance);
+                    pred.put(neighbourNode, currNode);
+                    toVisit.add(neighbourNode);
                 }
             }
         }
@@ -75,15 +70,124 @@ public class Graph {
         ArrayList<Edge> path = new ArrayList<>();
         Stack<Edge> temp = new Stack<>();
 
-        String curr = dst;
-        while (!curr.equals(src)) {
-            Edge e = getEdge(curr, pred.get(curr));
-//            System.out.println(curr + " " + pred.get(curr));
+        QueueNode curr = nodeList.get(dst);
+        while (curr != (nodeList.get(src))) {
+            Edge e = getEdge(pred.get(curr).getName(), curr.getName());
             temp.push(e);
             curr = pred.get(curr);
         }
         while (!temp.isEmpty()) {
-            path.add(temp.pop());
+            Edge e = temp.pop();
+//            System.out.print(e.getStartNode() + " ---> " + e.getDestNode());
+            path.add(e);
+        }
+        return path;
+    }
+
+    public ArrayList<Edge> shortestDelayPath(Stats stats, String src, String dst) {
+        // Create queues and maps for toVisit, distances from source, and predecessors
+        PriorityQueue<QueueNode> toVisit = new PriorityQueue<>();
+        HashMap<QueueNode, QueueNode> pred = new HashMap<>();
+        HashMap<String, QueueNode> nodeList = new HashMap<>();
+
+        for (String node : adjMatrix.keySet()) {
+            // Initialise distance from source to nodes as max
+            QueueNode qNode = new QueueNode(node, Integer.MAX_VALUE);
+            // Initialise previous nodes in the optimal path to be null
+            pred.put(qNode, null);
+            nodeList.put(node, qNode);
+        }
+        // Set the source node distance value to 0 and add it to the toVisit Queue
+        QueueNode srcNode = nodeList.get(src);
+        srcNode.setVal(0);
+        toVisit.add(srcNode);
+        while (!toVisit.isEmpty()) {
+            QueueNode currNode = toVisit.poll();
+            if (currNode.getName().equals(dst)) {
+                break;
+            }
+            // Check each neighbouring node of curr and get the load on each edge
+            for (String neighbour : adjMatrix.get(currNode.getName()).keySet()) {
+                QueueNode neighbourNode = nodeList.get(neighbour);
+                Edge neighbourEdge = getEdge(currNode.getName(), neighbour);
+                float distance = currNode.getVal() + neighbourEdge.getPropDelay();
+                // If a shorter path to this neighbour exists
+                // Update its distance and its predecessor
+                if (distance < neighbourNode.getVal())  {
+                    neighbourNode.setVal(distance);
+                    pred.put(neighbourNode, currNode);
+                    toVisit.add(neighbourNode);
+                }
+            }
+        }
+
+        // Now go through your predecessors from dst to src and chuck edges in a list in the right order
+        ArrayList<Edge> path = new ArrayList<>();
+        Stack<Edge> temp = new Stack<>();
+
+        QueueNode curr = nodeList.get(dst);
+        while (curr != (nodeList.get(src))) {
+            Edge e = getEdge(pred.get(curr).getName(), curr.getName());
+            temp.push(e);
+            curr = pred.get(curr);
+        }
+        while (!temp.isEmpty()) {
+            Edge e = temp.pop();
+            path.add(e);
+        }
+        return path;
+    }
+
+    public ArrayList<Edge> leastLoadedPath(Stats stats, String src, String dst) {
+        // Create queues and maps for toVisit, distances from source, and predecessors
+        PriorityQueue<QueueNode> toVisit = new PriorityQueue<>();
+        HashMap<QueueNode, QueueNode> pred = new HashMap<>();
+        HashMap<String, QueueNode> nodeList = new HashMap<>();
+
+        for (String node : adjMatrix.keySet()) {
+            // Initialise distance from source to nodes as max
+            QueueNode qNode = new QueueNode(node, Integer.MAX_VALUE);
+            // Initialise previous nodes in the optimal path to be null
+            pred.put(qNode, null);
+            nodeList.put(node, qNode);
+        }
+        // Set the source node distance value to 0 and add it to the toVisit Queue
+        QueueNode srcNode = nodeList.get(src);
+        srcNode.setVal(0);
+        toVisit.add(srcNode);
+        while (!toVisit.isEmpty()) {
+            QueueNode currNode = toVisit.poll();
+            if (currNode.getName().equals(dst)) {
+                break;
+            }
+            // Check each neighbouring node of curr
+            for (String neighbour : adjMatrix.get(currNode.getName()).keySet()) {
+                QueueNode neighbourNode = nodeList.get(neighbour);
+                Edge neighbourEdge = getEdge(currNode.getName(), neighbour);
+                float distance = currNode.getVal() + neighbourEdge.getEdgeLoad();
+                // If a shorter path to this neighbour exists
+                // Update its distance and its predecessor
+                if (distance < neighbourNode.getVal())  {
+                    neighbourNode.setVal(distance);
+                    pred.put(neighbourNode, currNode);
+                    toVisit.add(neighbourNode);
+                }
+            }
+        }
+
+        // Now go through your predecessors from dst to src and chuck edges in a list in the right order
+        ArrayList<Edge> path = new ArrayList<>();
+        Stack<Edge> temp = new Stack<>();
+
+        QueueNode curr = nodeList.get(dst);
+        while (curr != (nodeList.get(src))) {
+            Edge e = getEdge(pred.get(curr).getName(), curr.getName());
+            temp.push(e);
+            curr = pred.get(curr);
+        }
+        while (!temp.isEmpty()) {
+            Edge e = temp.pop();
+            path.add(e);
         }
         return path;
     }

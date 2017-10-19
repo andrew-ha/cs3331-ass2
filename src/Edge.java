@@ -32,6 +32,8 @@ public class Edge {
         return simVirtualCircuitCapacity;
     }
 
+    public float getEdgeLoad() { return (float)currConnections/(float)simVirtualCircuitCapacity; }
+
     public boolean checkConnectionValid(boolean isEstablish) {
 
         if (isEstablish) {

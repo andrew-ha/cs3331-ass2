@@ -26,7 +26,7 @@ public class Request implements Comparable<Request> {
     @Override
     public int compareTo(Request comparedRequest) {
 
-        return (time < comparedRequest.getTime()) ? -1 : 1;
+        return (time < comparedRequest.getTime()) ? 1 : -1;
 
     }
 
