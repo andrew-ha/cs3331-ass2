@@ -5,7 +5,8 @@ public class Main {
 
     public static void main(String[] args) {
         Graph g = new Graph();
-
+        String NETWORK_SCHEME = args[0];
+        String ROUTING_SCHEME = args[1];
         // list of requests to be made from the workload file
         PriorityQueue<Request> listOfRequests = new PriorityQueue<>();
         // statistics for the SHP request
@@ -14,7 +15,7 @@ public class Main {
         //Read in the topology
         Scanner sc = null;
         try {
-            sc = new Scanner(new File(args[0]));
+            sc = new Scanner(new File(args[2]));
 
             while (sc.hasNext()) {
                 String[] line = sc.nextLine().split(" ");
@@ -31,7 +32,7 @@ public class Main {
 
         // Read in the workload file
         try {
-            sc = new Scanner(new File(args[1]));
+            sc = new Scanner(new File(args[3]));
 
             while (sc.hasNext()) {
                 String[] line = sc.nextLine().split(" ");
@@ -43,12 +44,20 @@ public class Main {
                 Stats stats = new Stats();
 
                 // Get path using chosen protocol
-                ArrayList<Edge> path = g.shortestHopPath(stats, source, destination);
+                ArrayList<Edge> path = null;
+                if (ROUTING_SCHEME.equals("SHP")) {
+                    path = g.shortestHopPath(stats, source, destination);
+                }
+                if (ROUTING_SCHEME.equals("SDP")) {
+                    path = g.shortestDelayPath(stats, source, destination);
+                }
+                if (ROUTING_SCHEME.equals("LLP")) {
+                    path = g.leastLoadedPath(stats, source, destination);
+                }
 
                 //Insert path into Request constructor and add to a Priority Queue
                 Request newStartRequest = new Request(timeStart, path, true);
                 Request newEndRequest = new Request(timeStart + duration, path, false);
-                shpStats.recordNewRequest();
                 listOfRequests.add(newStartRequest);
                 listOfRequests.add(newEndRequest);
 

@@ -32,7 +32,7 @@ public class QueueNode implements Comparable<QueueNode> {
 
         // If two values are equal
         else {
-            return ThreadLocalRandom.current().nextInt(-1, 2);
+            return ThreadLocalRandom.current().nextInt(-1, 1);
         }
     }
 }

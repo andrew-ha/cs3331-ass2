@@ -47,11 +47,11 @@ public class Stats {
 
         System.out.println("number of virtual circuit requests: " + numOfRequests);
         System.out.println("number of successfully routed requests: " + numOfSuccessRequests);
-        System.out.println("percentage of routed request: " + numOfSuccessRequests/numOfRequests);
+        System.out.println("percentage of routed request: " + ((float)numOfSuccessRequests/numOfRequests)*100);
         System.out.println("number of blocked requests: " + numOfBlockedRequests);
-        System.out.println("percentage of blocked request: " + numOfBlockedRequests/numOfRequests);
-        System.out.println("average number of hops per circuit: " + numOfHopsTotal/numOfRequests);
-        System.out.println("average cumulative propagation delay per circuit: " + propDelayTotal/numOfRequests);
+        System.out.println("percentage of blocked request: " + ((float)numOfBlockedRequests/numOfRequests)*100);
+        System.out.println("average number of hops per circuit: " + (float)numOfHopsTotal/numOfRequests);
+        System.out.println("average cumulative propagation delay per circuit: " + (float)propDelayTotal/numOfRequests);
 
     }
 
