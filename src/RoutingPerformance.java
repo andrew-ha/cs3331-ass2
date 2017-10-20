@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class RoutingPerformance {
 
     public static void main(String[] args) {
         Graph g = new Graph();
