@@ -34,7 +34,7 @@ public class QueueNode implements Comparable<QueueNode> {
         // picks a random int between -10 and 10 (upper bound is exclusive)
         else {
             Random randomGenerator = new Random();
-            System.out.println(randomGenerator.nextBoolean());
+            // System.out.println(randomGenerator.nextBoolean());
             if (randomGenerator.nextBoolean()) {
                 return 1;
             } else {
