@@ -7,6 +7,7 @@ public class RoutingPerformance {
         Graph g = new Graph();
         String NETWORK_SCHEME = args[0];
         String ROUTING_SCHEME = args[1];
+        int PACKET_RATE = Integer.parseInt(args[4]);
         // list of requests to be made from the workload file
         PriorityQueue<Request> listOfRequests = new PriorityQueue<>();
         // statistics for the SHP request
@@ -56,8 +57,9 @@ public class RoutingPerformance {
                 }
 
                 //Insert path into Request constructor and add to a Priority Queue
-                Request newStartRequest = new Request(timeStart, path, true);
-                Request newEndRequest = new Request(timeStart + duration, path, false);
+                // Also put in times and num packets
+                Request newStartRequest = new Request(timeStart, path, (int)(PACKET_RATE * duration),true);
+                Request newEndRequest = new Request(timeStart + duration, path, (int)(PACKET_RATE * duration),false);
                 listOfRequests.add(newStartRequest);
                 listOfRequests.add(newEndRequest);
 
@@ -72,7 +74,10 @@ public class RoutingPerformance {
                 Request currRequest = listOfRequests.poll();
                 boolean requestBlocked = false;
 
-                if (currRequest.isEstablish()) shpStats.recordNewRequest();
+                if (currRequest.isEstablish()) {
+                    shpStats.recordNewRequest();
+                    shpStats.addTotalPackets(currRequest.getNumPackets());
+                }
 
                 // for each edge in the request
                 for (Edge currEdge : currRequest.getEdges()) {
@@ -82,13 +87,17 @@ public class RoutingPerformance {
 
                         // try to add the connection
                         connectionSuccess = currEdge.updateConnection(true);
-                        if (connectionSuccess) {
-                            shpStats.recordHop(false);
-                            shpStats.recordPropDelay(currEdge.getPropDelay());
-                        } else {
-                            //shpStats.recordBlockedRequest();
+                        shpStats.recordHop(false);
+                        shpStats.recordPropDelay(currEdge.getPropDelay());
+                        if (!connectionSuccess) {
                             requestBlocked = true;
                         }
+
+                        // If the edge is full, raise a flag.
+//                        } else {
+//                            //shpStats.recordBlockedRequest();
+//
+//                        }
 
                     } else {
                         // remove a connection
@@ -98,9 +107,13 @@ public class RoutingPerformance {
 
                 }
 
+                // If the connection was blocked go back through the edges and revert changes
                 if(requestBlocked) {
 
-                    if (currRequest.isEstablish()) shpStats.recordBlockedRequest();
+                    if (currRequest.isEstablish()) {
+                        shpStats.recordBlockedRequest();
+                        shpStats.addNumBlockedPackets(currRequest.getNumPackets());
+                    }
 
                     for (Edge currEdge : currRequest.getEdges()) {
 
@@ -116,7 +129,10 @@ public class RoutingPerformance {
 
                 } else {
 
-                    if (currRequest.isEstablish()) shpStats.recordSuccessfulRequest();
+                    if (currRequest.isEstablish()) {
+                        shpStats.recordSuccessfulRequest();
+                        shpStats.addRoutedPackets(currRequest.getNumPackets());
+                    }
 
                 }
 

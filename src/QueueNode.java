@@ -1,4 +1,4 @@
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 
 public class QueueNode implements Comparable<QueueNode> {
     private String name;
@@ -24,15 +24,21 @@ public class QueueNode implements Comparable<QueueNode> {
     @Override
     public int compareTo(QueueNode comparedNode) {
         if (val < comparedNode.val) {
-            return 1;
-        }
-        else if (val > comparedNode.val) {
             return -1;
         }
+        else if (val > comparedNode.val) {
+            return 1;
+        }
 
-        // If two values are equal
+        // If two values are equal assign them at random
+        // picks a random int between -10 and 10 (upper bound is exclusive)
         else {
-            return ThreadLocalRandom.current().nextInt(-1, 1);
+            Random randomGenerator = new Random(System.currentTimeMillis());
+            if (randomGenerator.nextBoolean()) {
+                return 1;
+            } else {
+                return -1;
+            }
         }
     }
 }

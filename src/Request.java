@@ -4,11 +4,13 @@ public class Request implements Comparable<Request> {
     private float time;
     private ArrayList<Edge> edges;
     private boolean isEstablish;
+    private int numPackets;
 
-    public Request(float time, ArrayList<Edge> edges, boolean isEstablish) {
+    public Request(float time, ArrayList<Edge> edges, int numPackets, boolean isEstablish) {
         this.time = time;
         this.edges = edges;
         this.isEstablish = isEstablish;
+        this.numPackets = numPackets;
     }
 
     public float getTime() {
@@ -23,11 +25,30 @@ public class Request implements Comparable<Request> {
         return isEstablish;
     }
 
+    public int getNumPackets() {
+        return numPackets;
+    }
+
     @Override
     public int compareTo(Request comparedRequest) {
 
-        return (time < comparedRequest.getTime()) ? 1 : -1;
+        if (time < comparedRequest.getTime()) {
+            return -1;
+        }
+        else if (time > comparedRequest.getTime()) {
+            return 1;
+        }
 
+        // If two values are equal assign them at random
+        // picks a random int between -10 and 10 (upper bound is exclusive)
+        else {
+            Random randomGenerator = new Random(System.currentTimeMillis());
+            if (randomGenerator.nextBoolean()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
     }
 
 }

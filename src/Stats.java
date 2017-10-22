@@ -8,6 +8,10 @@ public class Stats {
     private int numOfBlockedRequests;
     private int numOfHopsTotal;
     private int propDelayTotal;
+    private int numRoutedPackets;
+    private int numBlockedPackets;
+    private int totalPackets;
+
 
     public Stats() {
 
@@ -16,6 +20,9 @@ public class Stats {
         numOfBlockedRequests = 0;
         numOfHopsTotal = 0;
         propDelayTotal = 0;
+        numRoutedPackets = 0;
+        numBlockedPackets = 0;
+        totalPackets = 0;
 
     }
 
@@ -43,7 +50,31 @@ public class Stats {
         propDelayTotal += propDelayInstance;
     }
 
-    public void printStats() {
+    public int getNumRoutedPackets() {
+        return numRoutedPackets;
+    }
+
+    public void addRoutedPackets(int numRoutedPackets) {
+        this.numRoutedPackets += numRoutedPackets;
+    }
+
+    public int getNumBlockedPackets() {
+        return numBlockedPackets;
+    }
+
+    public void addNumBlockedPackets(int numBlockedPackets) {
+        this.numBlockedPackets += numBlockedPackets;
+    }
+
+    public int getTotalPackets() {
+        return totalPackets;
+    }
+
+    public void addTotalPackets(int totalPackets) {
+        this.totalPackets += totalPackets;
+    }
+
+    public void printStatsOld() {
 
         System.out.println("number of virtual circuit requests: " + numOfRequests);
         System.out.println("number of successfully routed requests: " + numOfSuccessRequests);
@@ -55,4 +86,16 @@ public class Stats {
 
     }
 
+    public void printStats() {
+
+        System.out.println("number of virtual connection requests: " + numOfRequests);
+        System.out.println("total number of packets: " + totalPackets);
+        System.out.println("number of successfully routed packets: " + numRoutedPackets);
+        System.out.printf("percentage of successfully routed packets: %.2f\n", ((float)numRoutedPackets/totalPackets)*100);
+        System.out.println("number of blocked packets: " + numBlockedPackets);
+        System.out.printf("percentage of blocked packets: %.2f\n", ((float)numBlockedPackets/totalPackets)*100);
+        System.out.printf("average number of hops per circuit: %.2f\n", (float)numOfHopsTotal/numOfSuccessRequests);
+        System.out.printf("average cumulative propagation delay per circuit: %.2f\n", (float)propDelayTotal/numOfSuccessRequests);
+
+    }
 }
