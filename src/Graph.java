@@ -1,3 +1,5 @@
+import java.awt.geom.RoundRectangle2D;
+import java.nio.channels.FileLock;
 import java.util.*;
 
 public class Graph {
@@ -116,6 +118,7 @@ public class Graph {
                 if (distance < neighbourNode.getVal())  {
                     neighbourNode.setVal(distance);
                     pred.put(neighbourNode, currNode);
+//                    System.out.println("adding");
                     toVisit.add(neighbourNode);
                 }
             }

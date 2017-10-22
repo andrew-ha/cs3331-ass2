@@ -40,9 +40,8 @@ public class Request implements Comparable<Request> {
         }
 
         // If two values are equal assign them at random
-        // picks a random int between -10 and 10 (upper bound is exclusive)
         else {
-            Random randomGenerator = new Random(System.currentTimeMillis());
+            Random randomGenerator = new Random();
             if (randomGenerator.nextBoolean()) {
                 return 1;
             } else {

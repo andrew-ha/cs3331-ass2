@@ -4,7 +4,7 @@ public class QueueNode implements Comparable<QueueNode> {
     private String name;
     private float val;
 
-    public QueueNode(String name, int val) {
+    public QueueNode(String name, float val) {
         this.name = name;
         this.val = val;
     }
@@ -33,7 +33,8 @@ public class QueueNode implements Comparable<QueueNode> {
         // If two values are equal assign them at random
         // picks a random int between -10 and 10 (upper bound is exclusive)
         else {
-            Random randomGenerator = new Random(System.currentTimeMillis());
+            Random randomGenerator = new Random();
+            System.out.println(randomGenerator.nextBoolean());
             if (randomGenerator.nextBoolean()) {
                 return 1;
             } else {
